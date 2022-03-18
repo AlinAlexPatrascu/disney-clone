@@ -1,39 +1,63 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-
+import { useParams } from 'react-router-dom'
+import db from '../firebase'
 
 function Detail() {
+  const { id } = useParams()
+  const [movie, setMovie] = useState()
+
+  useEffect(() => {
+    //grab the movie from the database
+    db.collection('Movies').doc(id).get()
+    .then((doc) => {
+      if (doc.exists) {
+        // set th movie data
+        setMovie(doc.data());
+      } else {
+        //redirect to homepage
+
+      }
+    })
+  }, [])
+
+  console.log("Movie is", movie)
+
+
   return (
     <Container>
-      <Background>
-        <img src="https://www.osservatore.ch/wp-content/uploads/2020/06/intro-1586193624.jpg" />
-      </Background>
-      <ImageTitle>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/47/The_Simpsons_Logo.png" />
-      </ImageTitle>
-      <Controls>
-        <PlayButton>
-          <img src="/images/play-icon-black.png" />
-          <span>PLAY</span>
-        </PlayButton>
-        <TrailerButton>
-          <img src="/images/play-icon-white.png" />
-          <span>TRAILER</span>
-        </TrailerButton>
-        <AddButton>
-          <span>+</span>
-        </AddButton>
-        <GroupWatchButton>
-          <img src="/images/group-icon.png" />
-        </GroupWatchButton>
-      </Controls>
-      <SubTitle>
-        2018 • 7m	• Family, Fantasy, Kids, Animation
-      </SubTitle>
-      <Description>
-        A Chinese mom who’s sad when her grow son leaves home gets another chance at motherhood when one of her dumplings to life. 
-        But she finds that nothing stays cute and small forever.
-      </Description>
+      { movie && (
+          <>
+            <Background>
+              <img src={movie.BackgroundImg} />
+            </Background>
+            <ImageTitle>
+              <img src={movie.TitleImg} />
+            </ImageTitle>
+            <Controls>
+            <PlayButton>
+              <img src="/images/play-icon-black.png" />
+              <span>PLAY</span>
+            </PlayButton>
+            <TrailerButton>
+              <img src="/images/play-icon-white.png" />
+              <span>TRAILER</span>
+            </TrailerButton>
+            <AddButton>
+              <span>+</span>
+            </AddButton>
+            <GroupWatchButton>
+              <img src="/images/group-icon.png" />
+            </GroupWatchButton>
+            </Controls>
+            <SubTitle>
+              {movie.Genres}
+            </SubTitle>
+            <Description>
+              {movie.Description}
+            </Description>
+          </>
+        )}
     </Container>
   )
 }
@@ -62,10 +86,11 @@ const Background = styled.div`
 
 const ImageTitle = styled.div`
   height: 30vh;
-  min-height: 170px;
-  width: 35vw;
-  min-width: 200px;
+  min-height: 200px;
+  width: 38vw;
+  min-width: 350px;
   margin-top: 60px;
+  margin-bottom: 10px;
 
   img {
     width: 100%;

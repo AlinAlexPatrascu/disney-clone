@@ -1,37 +1,97 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
+import { useNavigate, Link as UnstyledLink } from 'react-router-dom'
+import 
+{
+  selectUserName,
+  selectUserPhoto,
+  setSignOut,
+  setUserLogin
+} from '../features/user/userSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { auth, provider } from '../firebase'
 
 function Header() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const userName = useSelector(selectUserName)
+  const userPhoto = useSelector(selectUserPhoto)
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      dispatch(setUserLogin({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }))
+      navigate('/');
+    });
+  }, [])
+
+  const signIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      let user = result.user;
+      console.log(result);
+      dispatch(setUserLogin({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }))
+      navigate('/');
+    });
+  }
+
+  const signOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setSignOut());
+      navigate('/login');
+    })
+  }
+
   return (
+
+    
     <Nav>
-      <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a>
-          <img src="/images/home-icon.svg" />
-          <span>HOME</span>
-        </a>
-        <a>
-          <img src="/images/search-icon.svg" />
-          <span>SEARCH</span>
-        </a>
-        <a>
-          <img src="/images/watchlist-icon.svg" />
-          <span>WATCHLIST</span>
-        </a>
-        <a>
-          <img src="/images/original-icon.svg" />
-          <span>ORIGINALS</span>
-        </a>
-        <a>
-          <img src="/images/movie-icon.svg" />
-          <span>MOVIE</span>
-        </a>
-        <a>
-          <img src="/images/series-icon.svg" />
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <UserImg src="/images/user.jpg"/>
+      <Link to='/'>
+        <Logo src="/images/logo.svg" />
+      </Link>
+      { !userName ?
+      (<LoginContainer>
+        <Login onClick={ signIn }>Login</Login>
+      </LoginContainer>) : 
+      (
+        <>
+          <NavMenu>
+            <Link to="/">
+              <img src="/images/home-icon.svg" />
+              <span>HOME</span>
+            </Link>
+            <a>
+              <img src="/images/search-icon.svg" />
+              <span>SEARCH</span>
+            </a>
+            <a>
+              <img src="/images/watchlist-icon.svg" />
+              <span>WATCHLIST</span>
+            </a>
+            <a>
+              <img src="/images/original-icon.svg" />
+              <span>ORIGINALS</span>
+            </a>
+            <a>
+              <img src="/images/movie-icon.svg" />
+              <span>MOVIE</span>
+            </a>
+            <a>
+              <img src="/images/series-icon.svg" />
+              <span>SERIES</span>
+            </a>
+          </NavMenu>
+          <UserImg onClick = { signOut }
+           src={ userPhoto } />
+        </>
+      )
+    }
     </Nav>
   )
 }
@@ -86,13 +146,13 @@ const NavMenu = styled.div`
       }
     }
 
-    &:hover {
-      span:after {
-        transform: scaleX(1);
-        opacity: 1;
+      &:hover {
+        span:after {
+          transform: scaleX(1);
+          opacity: 1;
+        }
       }
     }
-  }
 `
 const UserImg = styled.img`
   width: 48px;
@@ -100,4 +160,33 @@ const UserImg = styled.img`
   border-radius: 50%;
   cursor: pointer;
 `
+const Login = styled.div`
+  border: 1px solid #f9f9f9;
+  padding: 8px 16px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: all 250ms ease 0ms;
+  
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color: transparent;
+  }
+`
+const LoginContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`
+const Link = styled(UnstyledLink)`
+    text-decoration: none;
+    color: #f9f9f9;
 
+    &:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: none;
+    }
+`;
