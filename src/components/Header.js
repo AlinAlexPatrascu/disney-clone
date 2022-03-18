@@ -19,12 +19,16 @@ function Header() {
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
-      dispatch(setUserLogin({
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL
-      }))
-      navigate('/');
+      if (user) {
+        dispatch(setUserLogin({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL
+        }))
+        navigate('/');
+      } else {
+        navigate('/login')
+      }
     });
   }, [])
 
@@ -56,10 +60,12 @@ function Header() {
         <Logo src="/images/logo.svg" />
       </Link>
       { !userName ?
-      (<LoginContainer>
-        <Login onClick={ signIn }>Login</Login>
-      </LoginContainer>) : 
       (
+        
+      <LoginContainer>
+        <Login onClick={ signIn }>Login</Login>
+      </LoginContainer>
+      ) : (
         <>
           <NavMenu>
             <Link to="/">
@@ -185,6 +191,8 @@ const LoginContainer = styled.div`
 const Link = styled(UnstyledLink)`
     text-decoration: none;
     color: #f9f9f9;
+    display: flex;
+    align-items: center;
 
     &:focus, &:hover, &:visited, &:link, &:active {
         text-decoration: none;
