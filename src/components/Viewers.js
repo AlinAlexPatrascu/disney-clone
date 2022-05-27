@@ -1,29 +1,29 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 function Viewers() {
   return (
     <Container>
       <Wrap>
-        <img src='/images/viewers-disney.png' />
+        <img src="/images/viewers-disney.png" />
       </Wrap>
       <Wrap>
-        <img src='/images/viewers-pixar.png' />
+        <img src="/images/viewers-pixar.png" />
       </Wrap>
       <Wrap>
-        <img src='/images/viewers-marvel.png' />
+        <img src="/images/viewers-marvel.png" />
       </Wrap>
       <Wrap>
-        <img src='/images/viewers-starwars.png' />
+        <img src="/images/viewers-starwars.png" />
       </Wrap>
       <Wrap>
-        <img src='/images/viewers-national.png' />
+        <img src="/images/viewers-national.png" />
       </Wrap>
     </Container>
-  )
+  );
 }
 
-export default Viewers
+export default Viewers;
 
 const Container = styled.div`
   display: grid;
@@ -31,7 +31,7 @@ const Container = styled.div`
   grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-gap: 25px;
   padding: 30px 0 26px;
-`
+`;
 
 const Wrap = styled.div`
   cursor: pointer;
@@ -49,8 +49,7 @@ const Wrap = styled.div`
   &:hover {
     transform: scale(1.05);
     box-shadow: rgb(0 0 0 / 80%) 0px 40px 58px -16px,
-    rgb(0 0 0 / 72%) 0px 30px 22px -10px;
+      rgb(0 0 0 / 72%) 0px 30px 22px -10px;
     border: 3px solid rgba(249, 249, 249, 0.8);
   }
-
-`
+`;

@@ -1,70 +1,69 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import { useNavigate, Link as UnstyledLink } from 'react-router-dom'
-import 
-{
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { useNavigate, Link as UnstyledLink } from 'react-router-dom';
+import {
   selectUserName,
   selectUserPhoto,
   setSignOut,
-  setUserLogin
-} from '../features/user/userSlice'
-import { useSelector, useDispatch } from 'react-redux'
-import { auth, provider } from '../firebase'
+  setUserLogin,
+} from '../features/user/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { auth, provider } from '../firebase';
 
 function Header() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const userName = useSelector(selectUserName)
-  const userPhoto = useSelector(selectUserPhoto)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userName = useSelector(selectUserName);
+  const userPhoto = useSelector(selectUserPhoto);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        dispatch(setUserLogin({
-          name: user.displayName,
-          email: user.email,
-          photo: user.photoURL
-        }))
+        dispatch(
+          setUserLogin({
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+          })
+        );
         navigate('/');
       } else {
-        navigate('/login')
+        navigate('/login');
       }
     });
-  }, [])
+  }, []);
 
   const signIn = () => {
     auth.signInWithPopup(provider).then((result) => {
       let user = result.user;
       console.log(result);
-      dispatch(setUserLogin({
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL
-      }))
+      dispatch(
+        setUserLogin({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        })
+      );
       navigate('/');
     });
-  }
+  };
 
   const signOut = () => {
     auth.signOut().then(() => {
       dispatch(setSignOut());
       navigate('/login');
-    })
-  }
+    });
+  };
 
   return (
-
-    
     <Nav>
-      <Link to='/'>
+      <Link to="/">
         <Logo src="/images/logo.svg" />
       </Link>
-      { !userName ?
-      (
-        
-      <LoginContainer>
-        <Login onClick={ signIn }>Login</Login>
-      </LoginContainer>
+      {!userName ? (
+        <LoginContainer>
+          <Login onClick={signIn}>Login</Login>
+        </LoginContainer>
       ) : (
         <>
           <NavMenu>
@@ -93,16 +92,14 @@ function Header() {
               <span>SERIES</span>
             </a>
           </NavMenu>
-          <UserImg onClick = { signOut }
-           src={ userPhoto } />
+          <UserImg onClick={signOut} src={userPhoto} />
         </>
-      )
-    }
+      )}
     </Nav>
-  )
+  );
 }
 
-export default Header
+export default Header;
 
 const Nav = styled.nav`
   height: 70px;
@@ -110,11 +107,11 @@ const Nav = styled.nav`
   display: flex;
   align-items: center;
   padding: 0 36px;
-`
+`;
 
 const Logo = styled.img`
   width: 80px;
-`
+`;
 
 const NavMenu = styled.div`
   display: flex;
@@ -138,7 +135,7 @@ const NavMenu = styled.div`
       position: relative;
 
       &:after {
-        content: "";
+        content: '';
         height: 2px;
         background: white;
         position: absolute;
@@ -152,20 +149,20 @@ const NavMenu = styled.div`
       }
     }
 
-      &:hover {
-        span:after {
-          transform: scaleX(1);
-          opacity: 1;
-        }
+    &:hover {
+      span:after {
+        transform: scaleX(1);
+        opacity: 1;
       }
     }
-`
+  }
+`;
 const UserImg = styled.img`
   width: 48px;
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
-`
+`;
 const Login = styled.div`
   border: 1px solid #f9f9f9;
   padding: 8px 16px;
@@ -175,26 +172,30 @@ const Login = styled.div`
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.6);
   transition: all 250ms ease 0ms;
-  
+
   &:hover {
     background-color: #f9f9f9;
     color: #000;
     border-color: transparent;
   }
-`
+`;
 const LoginContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-`
+`;
 const Link = styled(UnstyledLink)`
-    text-decoration: none;
-    color: #f9f9f9;
-    display: flex;
-    align-items: center;
+  text-decoration: none;
+  color: #f9f9f9;
+  display: flex;
+  align-items: center;
 
-    &:focus, &:hover, &:visited, &:link, &:active {
-        text-decoration: none;
-    }
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
 `;

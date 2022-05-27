@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   name: '',
   email: '',
-  photo: ''
-}
+  photo: '',
+};
 
 const userSlice = createSlice({
   name: 'user',
@@ -14,15 +14,14 @@ const userSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.photo = action.payload.photo;
-
     },
     setSignOut: (state, action) => {
       state.name = null;
       state.email = null;
       state.photo = null;
-    }
+    },
   },
-})
+});
 
 export const { setUserLogin, setSignOut } = userSlice.actions;
 

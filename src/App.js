@@ -4,14 +4,13 @@ import Header from './components/Header';
 import Home from './components/Home';
 import Detail from './components/Detail';
 import Login from './components/Login';
-import { 
-  BrowserRouter as Router, 
+import {
+  BrowserRouter as Router,
   Route,
   Routes as Switch,
-} from 'react-router-dom'
+} from 'react-router-dom';
 
 function App() {
-  
   return (
     <div className="App">
       <Router>
